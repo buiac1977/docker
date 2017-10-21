@@ -56,6 +56,15 @@ RUN apt-get -y --force-yes install supervisor fhem telnet
 RUN mkdir -p /var/log/supervisor
 
 RUN echo Europe/Berlin > /etc/timezone && dpkg-reconfigure tzdata
+RUN wget https://github.com/knowthelist/fhem-tablet-ui/archive/master.zip
+RUN unzip master.zip && rm master.zip
+RUN cp -r ./fhem-tablet-ui-master/www/tablet /opt/fhem/www/
+RUN cp /opt/fhem/www/tablet/index-example.html /opt/fhem/www/tablet/index.html
+
+RUN echo 'define TABLETUI HTTPSRV ftui/ ./www/tablet/ Tablet-UI' >> /opt/fhem/fhem.cfg
+RUN echo 'attr WEB JavaScripts codemirror/fhem_codemirror.js' >> /opt/fhem/fhem.cfg
+RUN echo 'attr WEB editConfig 1' >> /opt/fhem/fhem.cfg
+RUN echo 'attr WEB menuEntries Backup,/fhem?cmd=backup,Update,cmd=update,UpdateCheck,cmd=update+check,Restart,cmd=shutdown+restart' >> /opt/fhem/fhem.cfg
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
