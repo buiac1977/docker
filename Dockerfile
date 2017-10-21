@@ -11,6 +11,7 @@ RUN apt-get update && apt-get upgrade -y --force-yes && apt-get install -y --for
 RUN apt-get -y --force-yes install wget apt-transport-https
 
 RUN apt-get -y --force-yes install \
+unzip \
 perl \
 git \
 apt-transport-https \
