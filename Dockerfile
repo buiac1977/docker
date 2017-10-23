@@ -65,6 +65,6 @@ RUN echo 'attr WEB menuEntries Backup,/fhem?cmd=backup,Update,cmd=update,UpdateC
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 VOLUME ["/opt/fhem"]
-EXPOSE 8083 2222
+EXPOSE 8083
 
 CMD ["/usr/bin/supervisord"]
