@@ -62,9 +62,16 @@ RUN echo 'attr WEB JavaScripts codemirror/fhem_codemirror.js' >> /opt/fhem/fhem.
 RUN echo 'attr WEB editConfig 1' >> /opt/fhem/fhem.cfg
 RUN echo 'attr WEB menuEntries Backup,/fhem?cmd=backup,Update,cmd=update,UpdateCheck,cmd=update+check,Restart,cmd=shutdown+restart' >> /opt/fhem/fhem.cfg
 
+# pulsway
+RUN wget https://www.pulseway.com/download/pulseway_x64.deb
+RUN dpkg -i pulseway_x64.deb && rm pulseway_x64.deb
+
+COPY config.xml /etc/pulseway/config.xml
+
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 VOLUME ["/opt/fhem"]
 EXPOSE 8083
 
+RUN /etc/init.d/pulseway start
 CMD ["/usr/bin/supervisord"]
