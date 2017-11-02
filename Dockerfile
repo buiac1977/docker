@@ -62,6 +62,19 @@ RUN echo 'attr WEB JavaScripts codemirror/fhem_codemirror.js' >> /opt/fhem/fhem.
 RUN echo 'attr WEB editConfig 1' >> /opt/fhem/fhem.cfg
 RUN echo 'attr WEB menuEntries Backup,/fhem?cmd=backup,Update,cmd=update,UpdateCheck,cmd=update+check,Restart,cmd=shutdown+restart' >> /opt/fhem/fhem.cfg
 
+RUN apt-get -y --force-yes install at cron && apt-get clean
+
+# sshd on port 2222 and allow root login / password = fhem!
+RUN apt-get -y --force-yes install openssh-server && apt-get clean
+RUN sed -i 's/Port 22/Port 2222/g' /etc/ssh/sshd_config
+RUN sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
+RUN echo "root:fhem!" | chpasswd
+RUN /bin/rm  /etc/ssh/ssh_host_*
+# RUN dpkg-reconfigure openssh-server
+
+RUN apt-get clean && apt-get autoremove
+
 # pulsway
 RUN wget https://www.pulseway.com/download/pulseway_x64.deb
 RUN dpkg -i pulseway_x64.deb && rm pulseway_x64.deb
@@ -71,7 +84,7 @@ COPY config.xml /etc/pulseway/config.xml
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 VOLUME ["/opt/fhem"]
-EXPOSE 8083
+EXPOSE 2222 8083
 
 RUN /etc/init.d/pulseway start
 CMD ["/usr/bin/supervisord"]
