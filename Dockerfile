@@ -80,8 +80,10 @@ RUN wget https://www.pulseway.com/download/pulseway_x64.deb
 RUN dpkg -i pulseway_x64.deb && rm pulseway_x64.deb
 
 COPY config.xml /etc/pulseway/config.xml
+ADD run.sh /root/run.sh
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ENTRYPOINT ["./run.sh"]
 
 VOLUME ["/opt/fhem"]
 EXPOSE 2222 8083
