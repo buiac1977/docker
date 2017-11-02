@@ -75,6 +75,8 @@ RUN /bin/rm  /etc/ssh/ssh_host_*
 
 RUN apt-get clean && apt-get autoremove
 
+WORKDIR /root
+
 # pulsway
 RUN wget https://www.pulseway.com/download/pulseway_x64.deb
 RUN dpkg -i pulseway_x64.deb && rm pulseway_x64.deb
